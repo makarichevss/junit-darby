@@ -37,7 +37,7 @@ public class DemoUtils {
         return obj;
     }
 
-    public Boolean isGreater(int n1, int n2) {
+    public static Boolean isGreater(int n1, int n2) {
         return n1 > n2;
     }
 

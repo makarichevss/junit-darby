@@ -1,11 +1,15 @@
 package junit_demo;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
+import java.time.Duration;
 import java.util.List;
 
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DemoUtilsTest {
 
     private DemoUtils demoUtils;
@@ -33,8 +37,10 @@ class DemoUtilsTest {
 
     }
 
+    @Disabled
     @Test
-    @DisplayName("Equals / not equals")
+    @Order(1)
+    @DisplayName("Equals / not equals add")
     void testAdd() {
 //        System.out.println("Running test: testAdd");
         assertEquals(6, demoUtils.add(2, 4));
@@ -42,7 +48,17 @@ class DemoUtilsTest {
     }
 
     @Test
-    @DisplayName("is null / not null")
+    @Order(0)
+    @DisplayName("Equals / not equals multiply")
+    void testMultiply() {
+//        System.out.println("Running test: testAdd");
+        assertEquals(9, demoUtils.multiply(3, 3));
+        assertNotEquals(10, demoUtils.add(3, 4));
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Is null / not null")
     void testCheckNull() {
 //        System.out.println("Running test: testCheckNull");
         String str1 = null;
@@ -69,6 +85,7 @@ class DemoUtilsTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Arrays/Iterables/Strings equality")
     void testStructuresEquality() {
         String[] arr = {"A", "B", "C"};
@@ -76,5 +93,19 @@ class DemoUtilsTest {
         assertArrayEquals(arr, demoUtils.getFirstThreeLettersOfAlphabet());
         assertIterableEquals(str, demoUtils.getAcademyInList());
         assertLinesMatch(str, demoUtils.getAcademyInList());
+    }
+
+    @Test
+    @DisplayName("Throws exception")
+    void testThrowException() {
+        assertThrows(Exception.class, () -> demoUtils.throwException(-1));
+        assertDoesNotThrow(() -> demoUtils.throwException(1));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Finishes until timeout")
+    void testCheckTimeout() {
+        assertTimeoutPreemptively(Duration.of(2100, MILLIS), () -> demoUtils.checkTimeout());
     }
 }

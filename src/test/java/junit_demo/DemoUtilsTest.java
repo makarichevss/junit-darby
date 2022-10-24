@@ -1,7 +1,6 @@
 package junit_demo;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.time.Duration;
 import java.util.List;
@@ -80,8 +79,8 @@ class DemoUtilsTest {
     void testTrueBig() {
         int grade1 = 10;
         int grade2 = 5;
-        assertTrue(demoUtils.isGreater(grade1, grade2), "Should return true");
-        assertFalse(demoUtils.isGreater(grade2, grade1), "Should return false");
+        assertTrue(DemoUtils.isGreater(grade1, grade2), "Should return true");
+        assertFalse(DemoUtils.isGreater(grade2, grade1), "Should return false");
     }
 
     @Test

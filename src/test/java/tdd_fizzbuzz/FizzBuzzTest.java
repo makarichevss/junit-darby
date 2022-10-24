@@ -1,9 +1,10 @@
 package tdd_fizzbuzz;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FizzBuzzTest {
@@ -34,5 +35,13 @@ class FizzBuzzTest {
     @DisplayName("Not divisible by 3 or 5")
     void testNotDivBy3or5() {
         assertEquals("2", FizzBuzz.compute(2));
+    }
+
+    @ParameterizedTest(name = "value={0}, expected={1}")
+    @CsvFileSource(resources = "/medium-test-data.csv")
+    @Order(0)
+    @DisplayName("Params for FizzBuzz")
+    void testParamFizzBuzz(int value, String expected) {
+        assertEquals(expected, FizzBuzz.compute(value));
     }
 }

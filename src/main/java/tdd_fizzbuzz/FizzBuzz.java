@@ -1,7 +1,5 @@
 package tdd_fizzbuzz;
 
-import java.util.List;
-
 public class FizzBuzz {
 
     public static String compute(int number) {

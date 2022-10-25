@@ -48,7 +48,7 @@ public class ApplicationTest {
         System.out.println("Testing: " + appInfo + ", " + appDescription + ", version: " + appVersion + ", method № " + counter);
         student.setFirstname("Eric");
         student.setLastname("Roby");
-        student.setEmailAddress("test@mail.ru");
+        student.setEmailAddress("test1@mail.ru");
         studentGrades.setMathGradeResults(new ArrayList<>(Arrays.asList(100.0, 85.0, 76.50, 91.75)));
         student.setStudentGrades(studentGrades);
     }

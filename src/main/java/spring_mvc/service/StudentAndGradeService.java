@@ -33,7 +33,7 @@ public class StudentAndGradeService {
         }
     }
 
-    public Collection<CollegeStudent> getGradebook() {
-        return (Collection<CollegeStudent>) studentDao.findAll();
+    public Iterable<CollegeStudent> getGradebook() {
+        return studentDao.findAll();
     }
 }

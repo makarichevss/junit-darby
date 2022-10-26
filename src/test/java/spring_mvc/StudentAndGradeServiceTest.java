@@ -8,14 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import spring_mvc.models.CollegeStudent;
 import spring_mvc.repository.StudentDao;
 import spring_mvc.service.StudentAndGradeService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,9 +43,9 @@ public class StudentAndGradeServiceTest {
 
     @Test
     public void createStudentService() {
-        studentService.createStudent("Sergey", "Makarichev", "1@mail.ru");
-        CollegeStudent student = studentDao.findByEmailAddress("1@mail.ru");
-        assertEquals("1@mail.ru", student.getEmailAddress());
+        studentService.createStudent("Sergey", "Makarichev", "6@mail.ru");
+        CollegeStudent student = studentDao.findByEmailAddress("6@mail.ru");
+        assertEquals("6@mail.ru", student.getEmailAddress());
     }
 
     @Test
@@ -65,8 +63,11 @@ public class StudentAndGradeServiceTest {
     @Test
     @Sql("/insertTestData.sql")
     public void getGradebookService() {
-        Collection<CollegeStudent> students = studentService.getGradebook();
-        List<CollegeStudent> studentList = new ArrayList<>( students);
-        assertEquals(5, studentList.size());
+        Iterable<CollegeStudent> students = studentService.getGradebook();
+        List<Object> collegeStudents = new ArrayList<>();
+        for (CollegeStudent student : students) {
+            collegeStudents.add(student);
+        }
+        assertEquals(5, collegeStudents.size());
     }
 }

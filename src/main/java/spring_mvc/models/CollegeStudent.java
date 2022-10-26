@@ -1,19 +1,22 @@
-package grading_system.models;
+package spring_mvc.models;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
-@Component
-@Scope(value = "prototype")
+@Entity
+@Table(name = "student")
 public class CollegeStudent implements Student {
-
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
+    @Column
     private String firstname;
+    @Column
     private String lastname;
+    @Column(name="email_address")
     private String emailAddress;
-    private StudentGrades studentGrades;
 
     public CollegeStudent() {
+
     }
 
     public CollegeStudent(String firstname, String lastname, String emailAddress) {
@@ -54,35 +57,22 @@ public class CollegeStudent implements Student {
         this.emailAddress = emailAddress;
     }
 
-    public StudentGrades getStudentGrades() {
-        return studentGrades;
-    }
 
-    public void setStudentGrades(StudentGrades studentGrades) {
-        this.studentGrades = studentGrades;
+    public String getFullName() {
+        return getFirstname() + " " + getLastname();
     }
 
     @Override
     public String toString() {
         return "CollegeStudent{" +
-                "firstname='" + firstname + '\'' +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
-                ", studentGrades=" + studentGrades +
                 '}';
     }
 
-    @Override
     public String studentInformation() {
-        return getFullName() + " " + getEmailAddress();
-    }
-
-    @Override
-    public String getFullName() {
-        return getFirstname() + " " + getLastname();
-    }
-
-    private String getFirstNameAndId(){
-        return getFirstname() + " " + getId();
+       return getFullName() + " " + getEmailAddress();
     }
 }

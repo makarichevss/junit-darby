@@ -1,5 +1,7 @@
 package spring_mvc.models;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
 @Entity

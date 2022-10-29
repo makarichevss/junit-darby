@@ -8,8 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import spring_mvc.models.CollegeStudent;
+import spring_mvc.models.HistoryGrade;
+import spring_mvc.models.MathGrade;
+import spring_mvc.models.ScienceGrade;
+import spring_mvc.repository.HistoryGradesDao;
+import spring_mvc.repository.MathGradesDao;
+import spring_mvc.repository.ScienceGradesDao;
 import spring_mvc.repository.StudentDao;
 import spring_mvc.service.StudentAndGradeService;
 
@@ -29,6 +34,15 @@ public class StudentAndGradeServiceTest {
 
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private MathGradesDao mathGradesDao;
+
+    @Autowired
+    private ScienceGradesDao scienceGradesDao;
+
+    @Autowired
+    private HistoryGradesDao historyGradesDao;
 
     @BeforeEach
     public void prepareDatabase() {
@@ -50,7 +64,7 @@ public class StudentAndGradeServiceTest {
 
     @Test
     public void isStudentNullTest() {
-        assertTrue(studentService.checkStudentIsNotNull(1));
+        assertTrue(studentService.checkIfStudentIsNull(1));
     }
 
     @Test
@@ -70,4 +84,18 @@ public class StudentAndGradeServiceTest {
         }
         assertEquals(5, collegeStudents.size());
     }
+
+    @Test
+    public void createGradeService() {
+        assertTrue(studentService.createGrade(80.50, 1, "math"));
+        assertTrue(studentService.createGrade(80.50, 1, "science"));
+        assertTrue(studentService.createGrade(80.50, 1, "history"));
+        Iterable<MathGrade> mathGrades = mathGradesDao.findGradeByStudentId(1);
+        Iterable<ScienceGrade> scienceGrades = scienceGradesDao.findGradeByStudentId(1);
+        Iterable<HistoryGrade> historyGrades = historyGradesDao.findGradeByStudentId(1);
+        assertTrue(mathGrades.iterator().hasNext());
+        assertTrue(scienceGrades.iterator().hasNext());
+        assertTrue(historyGrades.iterator().hasNext());
+    }
+
 }

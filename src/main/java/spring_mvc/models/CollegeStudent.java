@@ -1,9 +1,12 @@
 package spring_mvc.models;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "student")
+@Component
 public class CollegeStudent implements Student {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

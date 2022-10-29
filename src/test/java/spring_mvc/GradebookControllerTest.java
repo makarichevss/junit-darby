@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -88,6 +87,14 @@ public class GradebookControllerTest {
 
     @Test
     public void createStudentRequest() throws Exception {
+
+        CollegeStudent studentOne = new CollegeStudent("Sergey", "Makarichev", "1@mail.ru");
+        List<CollegeStudent> studentList = new ArrayList<>(List.of(studentOne));
+
+        when(studentServiceMock.getGradebook()).thenReturn(studentList);
+
+        assertIterableEquals(studentList, studentServiceMock.getGradebook());
+
         MvcResult result = this.mockMvc.perform(post("/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("firstname", request.getParameterValues("firstname"))
@@ -101,5 +108,27 @@ public class GradebookControllerTest {
 
         CollegeStudent checkStudent = studentDao.findByEmailAddress("3@mail.ru");
         assertNotNull(checkStudent);
+    }
+
+    @Test
+    public void deleteStudentTest() throws Exception {
+        assertTrue(studentDao.findById(1).isPresent());
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/delete/student/{id}", 1)).andExpect(status().isOk())
+                .andReturn();
+        ModelAndView mav = result.getModelAndView();
+        if (mav != null) {
+            ModelAndViewAssert.assertViewName(mav, "index");
+        }
+        assertFalse(studentDao.findById(1).isPresent());
+    }
+
+    @Test
+    public void deleteStudentErrorPageTest() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/delete/student/{id}", 0)).andExpect(status().isOk())
+                .andReturn();
+        ModelAndView mav = result.getModelAndView();
+        if (mav != null) {
+            ModelAndViewAssert.assertViewName(mav, "error");
+        }
     }
 }

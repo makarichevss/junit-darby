@@ -6,4 +6,6 @@ import spring_mvc.models.ScienceGrade;
 public interface ScienceGradesDao  extends CrudRepository<ScienceGrade, Integer> {
 
     Iterable<ScienceGrade> findGradeByStudentId(int id);
+
+    void deleteByStudentId(int id);
 }

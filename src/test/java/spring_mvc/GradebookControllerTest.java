@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -50,6 +51,12 @@ public class GradebookControllerTest {
     @Autowired
     private StudentDao studentDao;
 
+    @Value("${sql.script.create.student}")
+    private String sqlAddStudent;
+
+    @Value("${sql.script.delete.student}")
+    private String sqlDeleteStudent;
+
     @BeforeAll
     public static void setupRequest() {
         request = new MockHttpServletRequest();
@@ -60,12 +67,12 @@ public class GradebookControllerTest {
 
     @BeforeEach
     public void prepareDatabase() {
-        jdbc.execute("insert into student(id, firstname, lastname, email_address)values (1, 'Sergey', 'Makarichev', '1@mail.ru')");
+        jdbc.execute(sqlAddStudent);
     }
 
     @AfterEach
     public void cleanDatabase() {
-        jdbc.execute("delete from student");
+        jdbc.execute(sqlDeleteStudent);
     }
 
     @Test
@@ -127,6 +134,28 @@ public class GradebookControllerTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/delete/student/{id}", 0)).andExpect(status().isOk())
                 .andReturn();
         ModelAndView mav = result.getModelAndView();
+        if (mav != null) {
+            ModelAndViewAssert.assertViewName(mav, "error");
+        }
+    }
+
+    @Test
+    public void studentInformationRequest() throws Exception {
+        assertTrue(studentDao.findById(1).isPresent());
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/studentInformation/{id}", 1))
+                .andExpect(status().isOk()).andReturn();
+        ModelAndView mav = mvcResult.getModelAndView();
+        if (mav != null) {
+            ModelAndViewAssert.assertViewName(mav, "studentInformation");
+        }
+    }
+
+    @Test
+    public void studentNonExistingInformationRequest() throws Exception {
+        assertFalse(studentDao.findById(0).isPresent());
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/studentInformation/{id}", 0))
+                .andExpect(status().isOk()).andReturn();
+        ModelAndView mav = mvcResult.getModelAndView();
         if (mav != null) {
             ModelAndViewAssert.assertViewName(mav, "error");
         }
